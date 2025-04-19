@@ -1,61 +1,68 @@
 import 'package:counter_app/controllers/counter_controller.dart';
-import 'package:counter_app/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class CounterButtons extends StatelessWidget {
-  final CounterController controller;
-  
-  const CounterButtons({required this.controller});
-  
+class ActionButtons extends StatelessWidget {
+  final CounterViewModel _viewModel = Get.find();
+
+  ActionButtons({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Decrement button
-        ElevatedButton(
-          onPressed: controller.decrement,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.secondaryVariant,
-            foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildButton(
+            context: context,
+            icon: Icons.remove,
+            onPressed: _viewModel.decrement,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.remove),
-              SizedBox(width: 8),
-              Text('Decrease', style: TextStyle(fontSize: 16)),
+          const SizedBox(width: 24),
+          _buildButton(
+            context: context,
+            icon: Icons.add,
+            onPressed: _viewModel.increment,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required BuildContext context,
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).shadowColor.withOpacity(0.2),
+                offset: const Offset(0, 4),
+                blurRadius: 12,
+                spreadRadius: 0,
+              ),
             ],
           ),
-        ),
-        
-        SizedBox(width: 20),
-        
-        // Increment button
-        ElevatedButton(
-          onPressed: controller.increment,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryColor,
-            foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add),
-              SizedBox(width: 8),
-              Text('Increase', style: TextStyle(fontSize: 16)),
-            ],
+          child: Icon(
+            icon,
+            size: 32,
+            color: Theme.of(context).primaryColor,
           ),
         ),
-      ],
+      ),
     );
   }
 }

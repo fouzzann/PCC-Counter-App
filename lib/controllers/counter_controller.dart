@@ -1,38 +1,32 @@
-import 'package:counter_app/model/counter_model.dart';
+// file: lib/viewmodels/counter_viewmodel.dart
 import 'package:get/get.dart';
 
-class CounterController extends GetxController {
-  // Create an observable counter model
-  final Rx<CounterModel> _counterModel = CounterModel().obs;
-  
-  // Getter for the counter value
-  int get count => _counterModel.value.value;
-  
-  // Warning message observable
-  final RxString warningMessage = ''.obs;
-  
+class CounterViewModel extends GetxController {
+  // Counter value
+  final _counter = 0.obs;
+  int get counter => _counter.value;
+
+  // Warning message
+  final _showWarning = false.obs;
+  bool get showWarning => _showWarning.value;
+
   // Increment counter
   void increment() {
-    _counterModel.value.value++;
-    _counterModel.refresh();
-    // Clear warning if present
-    if (warningMessage.isNotEmpty) {
-      warningMessage.value = '';
-    }
+    _counter.value++;
+    _showWarning.value = false;
   }
-  
+
   // Decrement counter
   void decrement() {
-    if (_counterModel.value.value > 0) {
-      _counterModel.value.value--;
-      _counterModel.refresh();
-      // Clear warning if not at zero
-      if (warningMessage.isNotEmpty && _counterModel.value.value > 0) {
-        warningMessage.value = '';
-      }
+    if (_counter.value > 0) {
+      _counter.value--;
     } else {
-      // Show warning message
-      warningMessage.value = 'Cannot go below 0';
+      _showWarning.value = true;
     }
+  }
+
+  // Reset warning
+  void resetWarning() {
+    _showWarning.value = false;
   }
 }
